@@ -1,0 +1,9 @@
+{
+	"name": "dfvinaymasterclass",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a47ad338-5cdf-4e7c-9ffa-9fce7223d246",
+		"tenantId": "3fdfd087-0422-4c96-87c0-0b6fe9dee161"
+	}
+}
