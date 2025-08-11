@@ -1,0 +1,45 @@
+{
+	"name": "scd_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_vinay",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Customers.csv",
+				"fileSystem": "scd"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "customerid",
+				"type": "String"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			},
+			{
+				"name": "salary ",
+				"type": "String"
+			},
+			{
+				"name": "city ",
+				"type": "String"
+			},
+			{
+				"name": "phonenumber",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
