@@ -1,0 +1,155 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText16",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable13",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable14",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable16",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "exists2"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customerid as integer,",
+				"          Name as string,",
+				"          salary as integer,",
+				"          Address as string,",
+				"          phonenumber as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          customerid as integer,",
+				"          Name as string,",
+				"          salary as integer,",
+				"          Address as string,",
+				"          phonenumber as integer,",
+				"          hashkey as binary,",
+				"          isactive as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 derive(src_hash = toBinary(md5(Address,phonenumber)),",
+				"          active = 1) ~> derivedColumn1",
+				"source2 derive(snk_hash = toBinary(md5(Address,phonenumber)),",
+				"          active = 0) ~> derivedColumn2",
+				"derivedColumn1, derivedColumn2 exists(hex(src_hash)==hex(snk_hash),",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"derivedColumn2 filter(isactive==1) ~> filter1",
+				"filter1, derivedColumn1 exists(source1@customerid==source2@customerid&&\r",
+				"src_hash!=snk_hash,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"exists2 alterRow(updateIf(true())) ~> alterRow1",
+				"exists1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          customerid as integer,",
+				"          Name as string,",
+				"          salary as integer,",
+				"          Address as string,",
+				"          phonenumber as integer,",
+				"          hashkey as binary,",
+				"          isactive as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          customerid,",
+				"          Name,",
+				"          salary,",
+				"          Address,",
+				"          phonenumber,",
+				"          hashkey = src_hash,",
+				"          isactive = active",
+				"     )) ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          customerid as integer,",
+				"          Name as string,",
+				"          salary as integer,",
+				"          Address as string,",
+				"          phonenumber as integer,",
+				"          hashkey as binary,",
+				"          isactive as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['customerid'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          customerid,",
+				"          Name,",
+				"          salary,",
+				"          Address,",
+				"          phonenumber,",
+				"          hashkey = snk_hash,",
+				"          isactive = active",
+				"     )) ~> sink2"
+			]
+		}
+	}
+}
