@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "dfvinaymasterclass"
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"adls_vinay_accountKey": {
+			"value": ""
+		},
+		"adlsgen2_accountKey": {
+			"value": ""
+		},
+		"github_raw_password": {
+			"value": ""
+		},
+		"linkedService1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "vinaysql.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "vinaydatabase"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "vinaydatabase"
+		},
+		"adls_vinay_properties_typeProperties_url": {
+			"value": "https://vinaydatalake99.dfs.core.windows.net/"
+		},
+		"adlsgen2_properties_typeProperties_url": {
+			"value": "https://vinaystoreagedata.dfs.core.windows.net/"
+		},
+		"github_raw_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com"
+		},
+		"github_raw_properties_typeProperties_userName": {
+			"value": "vinaydatabase"
+		}
+	}
+}
