@@ -1,0 +1,49 @@
+{
+	"name": "AzureSqlTable23",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "customerid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Name",
+				"type": "varchar"
+			},
+			{
+				"name": "salary",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Address",
+				"type": "varchar"
+			},
+			{
+				"name": "phonenumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "hashkey",
+				"type": "varbinary"
+			},
+			{
+				"name": "isactive",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "customers_data"
+		}
+	}
+}
