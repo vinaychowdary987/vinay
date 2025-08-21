@@ -30,6 +30,8 @@
 		"folder": {
 			"name": "vinay"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2025-08-21T06:33:50Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
