@@ -12,17 +12,13 @@
 					"name": "source1"
 				},
 				{
-					"dataset": {
-						"referenceName": "SCD_SNK",
-						"type": "DatasetReference"
-					},
 					"name": "source2"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "scd_snk1",
+						"referenceName": "AzureSqlTable26",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -66,19 +62,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source(output(",
-				"          customerid as integer,",
-				"          Name as string,",
-				"          salary as integer,",
-				"          Address as string,",
-				"          phonenumber as integer,",
-				"          hashkey as binary,",
-				"          isactive as integer",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source2",
 				"source1 derive(SRC_HASH = toBinary(md5(Address)),",
 				"          Active = 1) ~> derivedColumn1",
 				"source2 derive(SNK_HASH = toBinary(md5(Address)),",
@@ -94,13 +79,13 @@
 				"exists1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          customerid as integer,",
-				"          Name as string,",
-				"          salary as integer,",
-				"          Address as string,",
-				"          phonenumber as integer,",
-				"          hashkey as binary,",
-				"          isactive as integer",
+				"          c_customerid as integer,",
+				"          c_Name as string,",
+				"          c_salary as integer,",
+				"          c_Address as string,",
+				"          c_phonenumber as integer,",
+				"          c_hashkey as binary,",
+				"          c_isactive as integer",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -146,7 +131,7 @@
 				"          Address,",
 				"          phonenumber,",
 				"          hashkey = SNK_HASH,",
-				"          isactive = Active1",
+				"          isactive",
 				"     )) ~> sink2"
 			]
 		}
