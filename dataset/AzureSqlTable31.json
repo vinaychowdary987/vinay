@@ -1,0 +1,56 @@
+{
+	"name": "AzureSqlTable31",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "c_customerid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "c_Name",
+				"type": "varchar"
+			},
+			{
+				"name": "c_salary",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "c_Address",
+				"type": "varchar"
+			},
+			{
+				"name": "c_phonenumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "c_hashkey",
+				"type": "varbinary"
+			},
+			{
+				"name": "c_modifieddate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "c_isactive",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "customers_data"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
