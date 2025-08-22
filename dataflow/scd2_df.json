@@ -1,0 +1,205 @@
+{
+	"name": "scd2_df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sr_scd_2",
+						"type": "DatasetReference"
+					},
+					"name": "adls"
+				},
+				{
+					"dataset": {
+						"referenceName": "sr2_scd2",
+						"type": "DatasetReference"
+					},
+					"name": "azuresql"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sr2_scd2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "sr2_scd2",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "sr2_scd2",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ID as integer,",
+				"          Name as string,",
+				"          Contact as string,",
+				"          Gmail as string,",
+				"          Address as string,",
+				"          Pincode as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> adls",
+				"source(output(",
+				"          E_ID as integer,",
+				"          E_Name as string,",
+				"          E_Contact as string,",
+				"          E_Gmail as string,",
+				"          E_Address as string,",
+				"          E_Pincode as string,",
+				"          E_HashKey as binary,",
+				"          Modified_Date as timestamp,",
+				"          IS_Active as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> azuresql",
+				"adls derive(Modified_Data = currentUTC(),",
+				"          Hash_Key = toBinary(md5(Contact,Gmail,Address)),",
+				"          Is_Active = true()) ~> derivedColumn1",
+				"azuresql filter(IS_Active==true()) ~> filter1",
+				"derivedColumn1, filter1 join(ID == E_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 split(isNull(E_ID),",
+				"     !isNull(E_ID) && (toString(Hash_Key) != coalesce(toString(E_HashKey),'0')),",
+				"     disjoint: false) ~> split1@(insertdata, existinginsert)",
+				"filter1, split1@existinginsert exists(azuresql@E_ID == ID,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 derive(x = false()) ~> derivedColumn2",
+				"derivedColumn2 alterRow(updateIf(true())) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          E_ID as integer,",
+				"          E_Name as string,",
+				"          E_Contact as string,",
+				"          E_Gmail as string,",
+				"          E_Address as string,",
+				"          E_Pincode as string,",
+				"          E_HashKey as binary,",
+				"          Modified_Date as timestamp,",
+				"          IS_Active as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['E_ID'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          E_ID,",
+				"          IS_Active = x",
+				"     )) ~> sink1",
+				"split1@insertdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          E_ID as integer,",
+				"          E_Name as string,",
+				"          E_Contact as string,",
+				"          E_Gmail as string,",
+				"          E_Address as string,",
+				"          E_Pincode as string,",
+				"          E_HashKey as binary,",
+				"          Modified_Date as timestamp,",
+				"          IS_Active as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          E_ID = ID,",
+				"          E_Name = Name,",
+				"          E_Contact = Contact,",
+				"          E_Gmail = Gmail,",
+				"          E_Address = Address,",
+				"          E_Pincode = Pincode,",
+				"          E_HashKey = Hash_Key,",
+				"          Modified_Date = Modified_Data,",
+				"          IS_Active = split1@insertdata@Is_Active",
+				"     )) ~> sink2",
+				"split1@existinginsert sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          E_ID as integer,",
+				"          E_Name as string,",
+				"          E_Contact as string,",
+				"          E_Gmail as string,",
+				"          E_Address as string,",
+				"          E_Pincode as string,",
+				"          E_HashKey as binary,",
+				"          Modified_Date as timestamp,",
+				"          IS_Active as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          E_ID = ID,",
+				"          E_Name = Name,",
+				"          E_Contact = Contact,",
+				"          E_Gmail = Gmail,",
+				"          E_Address = Address,",
+				"          E_Pincode = Pincode,",
+				"          E_HashKey = Hash_Key,",
+				"          Modified_Date = Modified_Data,",
+				"          IS_Active = split1@existinginsert@Is_Active",
+				"     )) ~> sink3"
+			]
+		}
+	}
+}

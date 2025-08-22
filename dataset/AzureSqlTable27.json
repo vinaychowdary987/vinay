@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable25",
+	"name": "AzureSqlTable27",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
@@ -37,7 +37,9 @@
 			},
 			{
 				"name": "c_modifieddate",
-				"type": "timestamp"
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
 				"name": "c_isactive",

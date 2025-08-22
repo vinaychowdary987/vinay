@@ -36,6 +36,10 @@
 				"type": "varbinary"
 			},
 			{
+				"name": "c_modifieddate",
+				"type": "timestamp"
+			},
+			{
 				"name": "c_isactive",
 				"type": "int",
 				"precision": 10
@@ -45,5 +49,6 @@
 			"schema": "dbo",
 			"table": "customers_data"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

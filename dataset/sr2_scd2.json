@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable25",
+	"name": "sr2_scd2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
@@ -9,45 +9,48 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "c_customerid",
+				"name": "E_ID",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "c_Name",
+				"name": "E_Name",
 				"type": "varchar"
 			},
 			{
-				"name": "c_salary",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "c_Address",
+				"name": "E_Contact",
 				"type": "varchar"
 			},
 			{
-				"name": "c_phonenumber",
-				"type": "int",
-				"precision": 10
+				"name": "E_Gmail",
+				"type": "varchar"
 			},
 			{
-				"name": "c_hashkey",
+				"name": "E_Address",
+				"type": "varchar"
+			},
+			{
+				"name": "E_Pincode",
+				"type": "varchar"
+			},
+			{
+				"name": "E_HashKey",
 				"type": "varbinary"
 			},
 			{
-				"name": "c_modifieddate",
-				"type": "timestamp"
+				"name": "Modified_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
-				"name": "c_isactive",
-				"type": "int",
-				"precision": 10
+				"name": "IS_Active",
+				"type": "bit"
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "customers_data"
+			"table": "Employee"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
