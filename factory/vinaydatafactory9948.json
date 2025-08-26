@@ -1,0 +1,9 @@
+{
+	"name": "vinaydatafactory9948",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c05ba6db-ec2d-4d74-b76c-d454ecc7e66a",
+		"tenantId": "ad3062d4-c460-4a4b-8df0-cd5771529df9"
+	}
+}
